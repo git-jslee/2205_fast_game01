@@ -1,10 +1,16 @@
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : Actor
 {
+    /// <summary>
+    /// 이동할 벡터
+    /// </sumary>
     [SerializeField]
     Vector3 MoveVector = Vector3.zero;
 
+    /// <summary>
+    /// 이동 속도
+    /// </sumary>
     [SerializeField]
     float Speed;
 
@@ -30,11 +36,15 @@ public class Player : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    // void Update()
+    protected override void UpdateActor()
     {
         UpdateMove();
     }
 
+    /// <summary>
+    /// 이동벡터에 맞게 위치를 변경
+    /// </sumary>
     void UpdateMove()
     {
         if(MoveVector.sqrMagnitude == 0)
@@ -89,6 +99,6 @@ public class Player : MonoBehaviour
         GameObject go = Instantiate(Bullet);
         
         Bullet bullet = go.GetComponent<Bullet>();
-        bullet.Fire(OwnerSide.Player, FireTransform.position, FireTransform.right, BulletSpeed);
+        bullet.Fire(OwnerSide.Player, FireTransform.position, FireTransform.right, BulletSpeed, Damage);
     }
 }

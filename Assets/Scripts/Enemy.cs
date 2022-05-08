@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : Actor
 {
     public enum State : int
     {
@@ -17,19 +17,31 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     State CurrentState = State.None;
 
+    /// <summary>
+    /// 최고 속도
+    /// </sumary>
     const float MaxSpeed = 10.0f;
 
+    /// <summary>
+    /// 최고 속도에 이르는 시간
+    /// </sumary>
     const float MaxSpeedTime = 0.5f;
 
+    /// <summary>
+    /// 목표점
+    /// </sumary>
     [SerializeField]
     Vector3 TargetPosition;
 
     [SerializeField]
     float CurrentSpeed;
 
+    /// <summary>
+    /// 방향을 고려한 속도 벡터
+    /// </sumary>
     Vector3 CurrentVelocity;
 
-    float MoveStartTime = 0.0f;
+    float MoveStartTime = 0.0f; // 이동시작 시간
 
     // float BattleStartTime = 0.0f;
 
@@ -54,7 +66,8 @@ public class Enemy : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    // void Update()
+    protected override void UpdateActor()
     {
         // if(Input.GetKeyDown(KeyCode.L))
         // {
@@ -75,6 +88,9 @@ public class Enemy : MonoBehaviour
                 break;
             case State.Battle:
                 UpdateBattle();
+                break;
+            default:
+                Debug.LogError("Undefined State!");
                 break;
         }
 
@@ -178,6 +194,6 @@ public class Enemy : MonoBehaviour
         GameObject go = Instantiate(Bullet);
         
         Bullet bullet = go.GetComponent<Bullet>();
-        bullet.Fire(OwnerSide.Enemy, FireTransform.position, -FireTransform.right, BulletSpeed);
+        bullet.Fire(OwnerSide.Enemy, FireTransform.position, -FireTransform.right, BulletSpeed, Damage);
     }
 }

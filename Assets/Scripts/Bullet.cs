@@ -25,6 +25,9 @@ public class Bullet : MonoBehaviour
 
     bool Hited = false;
 
+    [SerializeField]
+    int Damage = 1;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,7 +39,7 @@ public class Bullet : MonoBehaviour
     {
         if(ProcessDisappearCondition())
             return;
-            
+
         UpdatedMove();
     }
 
@@ -51,12 +54,13 @@ public class Bullet : MonoBehaviour
         transform.position += moveVector;
     }
 
-    public void Fire(OwnerSide FireOwner, Vector3 firePosition, Vector3 direction, float speed)
+    public void Fire(OwnerSide FireOwner, Vector3 firePosition, Vector3 direction, float speed, int damage)
     {
         ownerSide = FireOwner;
         transform.position = firePosition;
         MoveDirection = direction;
         Speed = speed;
+        Damage = damage;
 
         NeedMove = true;
         FiredTime = Time.time;
@@ -79,6 +83,34 @@ public class Bullet : MonoBehaviour
     {
         if (Hited)
             return;
+        
+        // ownerSide, OwnerSide.Player -> Player
+        if(ownerSide == OwnerSide.Player)
+        {
+            Enemy enemy = collider.GetComponentInParent<Enemy>();
+            Debug.Log("enemy => " + enemy);
+            Debug.Log("enemy IsDead => " + enemy.IsDead);
+            if(enemy.IsDead)
+                return;
+            
+            enemy.OnBulletHited(Damage);
+        }
+        else
+        {
+            Player player = collider.GetComponentInParent<Player>();
+            Debug.Log("player => " + player);
+            Debug.Log("player IsDead => " + player.IsDead);
+            if (player.IsDead)
+                return;
+            
+            player.OnBulletHited(Damage);
+        }
+
+        // if(collider.gameObject.layer == LayerMask.NameToLayer("EnemyBullet") 
+        //     || collider.   gameObject.layer == LayerMask.NameToLayer("Bullet"))
+        // {
+        //     return;
+        // }
 
         Collider myCollider = GetComponentInChildren<Collider>();
         myCollider.enabled = false;
@@ -88,14 +120,7 @@ public class Bullet : MonoBehaviour
 
         // Debug.Log("OnBulletCollision collider = " + collider.name);
 
-        if(ownerSide == OwnerSide.Player)
-        {
-            Enemy enemy = collider.GetComponent<Enemy>();
-        }
-        else
-        {
-            Player payer = collider.GetComponent<Player>();
-        }
+
     }
     
     private void OnTriggerEnter(Collider other)

@@ -13,17 +13,6 @@ public class SystemManager : MonoBehaviour
         }
     }
 
-    private void Awake() {
-        if(instance != null)
-        {
-            Debug.LogError("SystemManager error! Singletone error");
-            Destroy(gameObject);
-            return;
-        }
-        
-        instance = this;
-    }
-
     [SerializeField]
     Player player;
 
@@ -33,6 +22,20 @@ public class SystemManager : MonoBehaviour
         {
             return player;
         }
+    }
+
+    private void Awake() {
+        if(instance != null)
+        {
+            Debug.LogError("SystemManager error! Singletone error");
+            Destroy(gameObject);
+            return;
+        }
+        
+        instance = this;
+
+        //Scene 이동간에 사라지지 않도록 처리
+        DontDestroyOnLoad(gameObject);
     }
 
     // Start is called before the first frame update
