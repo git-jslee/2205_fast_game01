@@ -1241,15 +1241,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 78191996527462614, guid: 84a285c1f2ead4a46b9c4796074491b3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.998779
+      value: -7
       objectReference: {fileID: 0}
     - target: {fileID: 78191996527462614, guid: 84a285c1f2ead4a46b9c4796074491b3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.0368226
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 78191996527462614, guid: 84a285c1f2ead4a46b9c4796074491b3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.73646045
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 78191996527462614, guid: 84a285c1f2ead4a46b9c4796074491b3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1290,6 +1290,10 @@ PrefabInstance:
     - target: {fileID: 2959186145848821895, guid: 84a285c1f2ead4a46b9c4796074491b3, type: 3}
       propertyPath: Speed
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2959186145848821895, guid: 84a285c1f2ead4a46b9c4796074491b3, type: 3}
+      propertyPath: BulletSpeed
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2959186145848821895, guid: 84a285c1f2ead4a46b9c4796074491b3, type: 3}
       propertyPath: boxCollider
