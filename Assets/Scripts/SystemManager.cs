@@ -24,6 +24,16 @@ public class SystemManager : MonoBehaviour
         }
     }
 
+    GamePointAccumulator gamePointAccumulator = new GamePointAccumulator();
+
+    public GamePointAccumulator GamePointAccumulator
+    {
+        get
+        {
+            return gamePointAccumulator;
+        }
+    }
+
     private void Awake() {
         if(instance != null)
         {
