@@ -34,7 +34,18 @@ public class SystemManager : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    EffectManager effectManager;
+
+    public EffectManager EffectManager
+    {
+        get{
+            return effectManager;
+        }
+    }
+
     private void Awake() {
+        // 유일하게 존재할 수 있도록 처리
         if(instance != null)
         {
             Debug.LogError("SystemManager error! Singletone error");

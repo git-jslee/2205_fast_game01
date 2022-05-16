@@ -59,6 +59,9 @@ public class Enemy : Actor
     [SerializeField]
     int FireRemainCount = 1;
 
+    [SerializeField]
+    int GamePoint = 10;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -109,6 +112,7 @@ public class Enemy : Actor
 
     void UpdateSpeed()
     {
+        // CurrentSpeed 에서 MaxSpeed 에 도달하는 비율을 흐른 시간많큼 계산
         CurrentSpeed = Mathf.Lerp(CurrentSpeed, MaxSpeed, (Time.time - MoveStartTime)/MaxSpeedTime);
     }
 
@@ -121,6 +125,7 @@ public class Enemy : Actor
             return;
         }
 
+        // 이동벡터 계산. 양 벡터의 차를 통해 이동벡터를 구한후 nomalized 로 단위벡터를 구한다. 속도를 곱해 현재 이동할 벡터를 계산
         CurrentVelocity = (TargetPosition - transform.position).normalized * CurrentSpeed;
 
         // 속도 = 거리 / 시간 이므로 시간 = 거리 / 속도
@@ -129,7 +134,7 @@ public class Enemy : Actor
 
     void Arrived()
     {
-        CurrentSpeed = 0.0f;
+        CurrentSpeed = 0.0f;    // 도착했으므로 속도는 0
         if(CurrentState == State.Appear)
         {
             CurrentState = State.Battle;
@@ -153,7 +158,7 @@ public class Enemy : Actor
     void Disappear(Vector3 targetPos)
     {
         TargetPosition = targetPos;
-        CurrentSpeed = 0.0f;
+        CurrentSpeed = 0.0f;        // 사라질때는 0부터 속도 증가
 
         CurrentState = State.Disappear;
         MoveStartTime = Time.time;
@@ -181,19 +186,34 @@ public class Enemy : Actor
 
         Player player = other.GetComponentInParent<Player>();
         if(player)
-            player.OnCrash(this);
+        {
+            if(!player.IsDead)
+                player.OnCrash(this, CrashDamage);
+        }
+            
     }
 
-    public void OnCrash(Player player)
+    public override void OnCrash(Actor attacker, int damage)
     {
-        Debug.Log("OnCrash enemy = " + player);
+        Debug.Log("OnCrash enemy = " + attacker);
+        base.OnCrash(attacker, damage);
     }
 
-        public void Fire()
+    public void Fire()
     {
         GameObject go = Instantiate(Bullet);
         
         Bullet bullet = go.GetComponent<Bullet>();
-        bullet.Fire(OwnerSide.Enemy, FireTransform.position, -FireTransform.right, BulletSpeed, Damage);
+        bullet.Fire(this, FireTransform.position, -FireTransform.right, BulletSpeed, Damage);
+    }
+
+    protected override void OnDead(Actor killer)
+    {
+        base.OnDead(killer);
+
+        SystemManager.Instance.GamePointAccumulator.Accumulate(GamePoint);
+
+        CurrentState = State.Dead;
+        Destroy(gameObject);
     }
 }

@@ -57,18 +57,19 @@ public class Actor : MonoBehaviour
 
     }
 
-    public virtual void OnBulletHited(int damage)
+    public virtual void OnBulletHited(Actor attacker, int damage)
     {
         Debug.Log("OnBulletHited damage = " + damage);
-        DecreaseHP(damage);
+        DecreaseHP(attacker, damage);
     }
 
-    public virtual void OnCrash(int damage)
+    public virtual void OnCrash(Actor attacker, int damage)
     {
         Debug.Log("OnCrash damage = " + damage);
+        DecreaseHP(attacker, damage);
     }
 
-    void DecreaseHP(int value)
+    void DecreaseHP(Actor attacker, int value)
     {
         if (isDead)
             return;
@@ -80,14 +81,16 @@ public class Actor : MonoBehaviour
 
         if (currentHP == 0)
         {
-            OnDead();
+            OnDead(attacker);
         }
 
     }
 
-    protected virtual void OnDead()
+    protected virtual void OnDead(Actor killer)
     {
         Debug.Log(name + " OnDead");
         isDead = true;
+
+        SystemManager.Instance.EffectManager.GenerateEffect(1, transform.position);
     }
 }
